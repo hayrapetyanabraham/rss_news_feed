@@ -1,6 +1,6 @@
 # newsfeed
 
-Smart click  task  application
+SmartClick  task  application
 
 ## Getting Started
 
