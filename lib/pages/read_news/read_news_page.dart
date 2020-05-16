@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:dart_rss/domain/rss_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ReadNewsPage extends StatefulWidget {
-  final RssItem rssItem;
+  final String newsUrl;
 
-  const ReadNewsPage({this.rssItem});
+  const ReadNewsPage({this.newsUrl});
 
   @override
   _ReadNewsPageState createState() => _ReadNewsPageState();
@@ -29,7 +28,7 @@ class _ReadNewsPageState extends State<ReadNewsPage> {
       appBar: AppBar(),
       body: Observer(builder: (_) {
         return WebView(
-          initialUrl: widget.rssItem.guid,
+          initialUrl: widget.newsUrl,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (webViewCreate) {
             _controller.complete(webViewCreate);

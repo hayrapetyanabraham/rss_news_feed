@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:dart_rss/domain/rss_item.dart';
 import 'package:mobx/mobx.dart';
+import 'package:newsfeed/helpers/data_helper.dart';
+import 'package:newsfeed/models/news_feed/news_feed.dart';
 import 'package:newsfeed/repositories/news_feed/news_feed_repository.dart';
 import 'package:newsfeed/store/loading/loading_state.dart';
 
@@ -11,14 +13,44 @@ class NewsFeedState = _NewsFeedState with _$NewsFeedState;
 abstract class _NewsFeedState with Store {
   final newsFeedRepository = NewsFeedRepository();
   final loadingState = LoadingState();
+  final dataHelper = DataHelper();
+
+  @observable
+  int countMb = 0;
 
   @observable
   List<RssItem> rssItemList = [];
+
+  @observable
+  List<NewsFeed> storedNewsFeedList = [];
 
   @action
   Future<void> getNewsFeeds() async {
     loadingState.startLoading();
     rssItemList = await newsFeedRepository.getNewsFeed();
     loadingState.stopLoading();
+  }
+
+  @action
+  Future<void> storeNewsFeed(RssItem rssItem) async {
+    final newsFeed = NewsFeed(
+        guid: rssItem.guid,
+        title: rssItem.title,
+        imageUrl: rssItem.enclosure.url,
+        description: rssItem.description,
+        date: rssItem.pubDate);
+    await dataHelper.add(newsFeed: newsFeed);
+  }
+
+  @action
+  Future<void> deleteNewsFeed({NewsFeed newsFeed}) async {
+    await dataHelper.delete(newsFeed: newsFeed);
+    getStoredItemList();
+  }
+
+  @action
+  Future<void> getStoredItemList() async {
+    storedNewsFeedList = await dataHelper.getAllNewsFeed();
+    countMb = await dataHelper.count();
   }
 }

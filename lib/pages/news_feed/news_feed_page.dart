@@ -24,8 +24,12 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   void showFullVersionNews(RssItem rssItem) {
     ExtendedNavigator.rootNavigator.pushNamed(
       Routes.readNewsPage,
-      arguments: ReadNewsPageArguments(rssItem: rssItem),
+      arguments: ReadNewsPageArguments(newsUrl: rssItem.guid),
     );
+  }
+
+  void onArchiveClick(RssItem rssItem) {
+    newsFeedState.storeNewsFeed(rssItem);
   }
 
   @override
@@ -47,12 +51,21 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                   shrinkWrap: true,
                   itemCount: newsFeedState.rssItemList.length,
                   itemBuilder: (context, index) {
+                    final rssItem = newsFeedState.rssItemList[index];
                     return ListTile(
                       onTap: () {
                         showFullVersionNews(newsFeedState.rssItemList[index]);
                       },
                       title: NewsFeedItem(
-                          rssItem: newsFeedState.rssItemList[index]),
+                        onArchiveClick: () {
+                          onArchiveClick(rssItem);
+                        },
+                        title: rssItem.title,
+                        imageUrl: rssItem.enclosure.url,
+                        description: rssItem.description,
+                        date: rssItem.pubDate,
+                        isArchive: false,
+                      ),
                     );
                   }),
             );

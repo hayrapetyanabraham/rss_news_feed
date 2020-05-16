@@ -1,14 +1,23 @@
-import 'package:dart_rss/domain/rss_item.dart';
 import 'package:flutter/material.dart';
 import 'package:newsfeed/constants/app_colors.dart';
 import 'package:newsfeed/helpers/date_helper.dart';
 import 'package:newsfeed/widget/shadow_container.dart';
-import 'package:intl/intl.dart';
 
 class NewsFeedItem extends StatelessWidget {
-  final RssItem rssItem;
+  final Function onArchiveClick;
+  final String title;
+  final String imageUrl;
+  final String description;
+  final String date;
+  final bool isArchive;
 
-  const NewsFeedItem({this.rssItem});
+  const NewsFeedItem(
+      {this.onArchiveClick,
+      this.title,
+      this.imageUrl,
+      this.description,
+      this.date,
+      this.isArchive});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +32,16 @@ class NewsFeedItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(
-              rssItem.title,
+              title,
               style: const TextStyle(
                   color: navyColor, fontSize: 20, fontWeight: FontWeight.w600),
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: Image.network(rssItem.enclosure.url),
+              child: Image.network(imageUrl),
             ),
             Text(
-              rssItem.description,
+              description,
               style: const TextStyle(color: charcoalGreyColor, fontSize: 16),
             ),
             Row(
@@ -40,16 +49,27 @@ class NewsFeedItem extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    convertDateFrom(rssItem.pubDate),
+                    convertDateFrom(date),
                     style: const TextStyle(color: navyColor, fontSize: 12),
                   ),
                 ),
                 Align(
                   heightFactor: 0.1,
                   widthFactor: 0.6,
-                  child: FlatButton(
-                    onPressed: () {},
-                    child: Icon(Icons.archive, size: 30, color: iconsMainColor),
+                  child: Container(
+                    height: 80.0,
+                    width: 80.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: FlatButton(
+                        onPressed: () {
+                          onArchiveClick();
+                        },
+                        child: isArchive
+                            ? Icon(Icons.delete, size: 30, color: iconsMainColor)
+                            : Icon(Icons.archive,
+                            size: 30, color: iconsMainColor)),
                   ),
                 )
               ],

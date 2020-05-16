@@ -10,7 +10,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:newsfeed/pages/dashboard/dashboard_page.dart';
 import 'package:newsfeed/pages/news_feed/news_feed_page.dart';
 import 'package:newsfeed/pages/read_news/read_news_page.dart';
-import 'package:dart_rss/domain/rss_item.dart';
 import 'package:newsfeed/pages/archive_news_feed/archive_news_feed_page.dart';
 
 abstract class Routes {
@@ -55,7 +54,7 @@ class Router extends RouterBase {
         final typedArgs =
             args as ReadNewsPageArguments ?? ReadNewsPageArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) => ReadNewsPage(rssItem: typedArgs.rssItem),
+          builder: (context) => ReadNewsPage(newsUrl: typedArgs.newsUrl),
           settings: settings,
         );
       case Routes.archiveNewsFeedPage:
@@ -75,6 +74,6 @@ class Router extends RouterBase {
 
 //ReadNewsPage arguments holder class
 class ReadNewsPageArguments {
-  final RssItem rssItem;
-  ReadNewsPageArguments({this.rssItem});
+  final String newsUrl;
+  ReadNewsPageArguments({this.newsUrl});
 }
