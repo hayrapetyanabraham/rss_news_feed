@@ -12,13 +12,13 @@ mixin _$NewsFeedState on _NewsFeedState, Store {
   final _$countMbAtom = Atom(name: '_NewsFeedState.countMb');
 
   @override
-  int get countMb {
+  double get countMb {
     _$countMbAtom.reportRead();
     return super.countMb;
   }
 
   @override
-  set countMb(int value) {
+  set countMb(double value) {
     _$countMbAtom.reportWrite(value, super.countMb, () {
       super.countMb = value;
     });

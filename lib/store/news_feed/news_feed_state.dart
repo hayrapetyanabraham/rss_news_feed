@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:dart_rss/domain/rss_item.dart';
 import 'package:mobx/mobx.dart';
 import 'package:newsfeed/helpers/data_helper.dart';
@@ -16,7 +17,7 @@ abstract class _NewsFeedState with Store {
   final dataHelper = DataHelper();
 
   @observable
-  int countMb = 0;
+  double countMb = 0;
 
   @observable
   List<RssItem> rssItemList = [];
@@ -26,9 +27,13 @@ abstract class _NewsFeedState with Store {
 
   @action
   Future<void> getNewsFeeds() async {
-    loadingState.startLoading();
+    if (rssItemList.isEmpty) {
+      loadingState.startLoading();
+    }
     rssItemList = await newsFeedRepository.getNewsFeed();
-    loadingState.stopLoading();
+    if (loadingState.loading) {
+      loadingState.stopLoading();
+    }
   }
 
   @action
@@ -51,6 +56,5 @@ abstract class _NewsFeedState with Store {
   @action
   Future<void> getStoredItemList() async {
     storedNewsFeedList = await dataHelper.getAllNewsFeed();
-    countMb = await dataHelper.count();
   }
 }

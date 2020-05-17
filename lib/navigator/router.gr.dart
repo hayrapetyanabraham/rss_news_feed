@@ -11,17 +11,20 @@ import 'package:newsfeed/pages/dashboard/dashboard_page.dart';
 import 'package:newsfeed/pages/news_feed/news_feed_page.dart';
 import 'package:newsfeed/pages/read_news/read_news_page.dart';
 import 'package:newsfeed/pages/archive_news_feed/archive_news_feed_page.dart';
+import 'package:newsfeed/pages/settings/settings_page.dart';
 
 abstract class Routes {
   static const dashboardPage = '/';
   static const newsFeedPage = '/news-feed-page';
   static const readNewsPage = '/read-news-page';
   static const archiveNewsFeedPage = '/archive-news-feed-page';
+  static const settingsPage = '/settings-page';
   static const all = {
     dashboardPage,
     newsFeedPage,
     readNewsPage,
     archiveNewsFeedPage,
+    settingsPage,
   };
 }
 
@@ -60,6 +63,11 @@ class Router extends RouterBase {
       case Routes.archiveNewsFeedPage:
         return MaterialPageRoute<dynamic>(
           builder: (context) => ArchiveNewsFeedPage(),
+          settings: settings,
+        );
+      case Routes.settingsPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => SettingsPage(),
           settings: settings,
         );
       default:

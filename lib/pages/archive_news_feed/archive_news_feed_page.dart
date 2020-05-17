@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:newsfeed/constants/app_colors.dart';
+import 'package:newsfeed/mixins/scaffold_mixin.dart';
 import 'package:newsfeed/models/news_feed/news_feed.dart';
 import 'package:newsfeed/navigator/router.gr.dart';
 import 'package:newsfeed/store/news_feed/news_feed_state.dart';
@@ -12,7 +13,8 @@ class ArchiveNewsFeedPage extends StatefulWidget {
   _ArchiveNewsFeedPageState createState() => _ArchiveNewsFeedPageState();
 }
 
-class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage> {
+class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage>
+    with ScaffoldMixin {
   final newsFeedState = NewsFeedState();
 
   @override
@@ -28,8 +30,9 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage> {
     );
   }
 
-  Future<void> onArchiveClick(NewsFeed newsFeed) async {
+  Future<void> onDeleteClick(NewsFeed newsFeed) async {
     await newsFeedState.deleteNewsFeed(newsFeed: newsFeed);
+    showSnackBar(scaffoldKey, text: 'Deleted', color: deletedColor);
   }
 
   @override
@@ -45,30 +48,39 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage> {
               ),
             )
           : Scaffold(
+              key: scaffoldKey,
               backgroundColor: primaryColor,
-              body: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: newsFeedState.storedNewsFeedList.length,
-                  itemBuilder: (context, index) {
-                    final newsFeed = newsFeedState.storedNewsFeedList[index];
-                    return ListTile(
-                      onTap: () {
-                        showFullVersionNews(newsFeedState.storedNewsFeedList[index]);
-                      },
-                      title: NewsFeedItem(
-                        onArchiveClick: () {
-                          onArchiveClick(newsFeed);
-                        },
-                        title: newsFeed.title,
-                        imageUrl: newsFeed.imageUrl,
-                        description: newsFeed.description,
-                        date: newsFeed.date,
-                        isArchive: true,
-                      ),
-                    );
-                  }),
-            );
+              body: newsFeedState.storedNewsFeedList.isNotEmpty
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 10, top: 10),
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: newsFeedState.storedNewsFeedList.length,
+                          itemBuilder: (context, index) {
+                            final newsFeed =
+                                newsFeedState.storedNewsFeedList[index];
+                            return ListTile(
+                              onTap: () {
+                                showFullVersionNews(
+                                    newsFeedState.storedNewsFeedList[index]);
+                              },
+                              title: NewsFeedItem(
+                                onActionClick: () {
+                                  onDeleteClick(newsFeed);
+                                },
+                                title: newsFeed.title,
+                                imageUrl: newsFeed.imageUrl,
+                                description: newsFeed.description,
+                                date: newsFeed.date,
+                                isArchive: true,
+                              ),
+                            );
+                          }),
+                    )
+                  : Center(
+                      child: Text('The archived news feeds are not existing'),
+                    ));
     });
   }
 }

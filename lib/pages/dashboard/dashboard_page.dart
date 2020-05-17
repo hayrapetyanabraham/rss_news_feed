@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:newsfeed/constants/app_colors.dart';
 import 'package:newsfeed/pages/archive_news_feed/archive_news_feed_page.dart';
 import 'package:newsfeed/pages/news_feed/news_feed_page.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:newsfeed/pages/settings/settings_page.dart';
+import 'package:newsfeed/store/news_feed/news_feed_state.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -12,13 +16,16 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage>
     with SingleTickerProviderStateMixin {
   final GlobalKey _bottomNavigationKey = GlobalKey();
+  final newsFeedState = NewsFeedState();
   TabController _tabController;
   int _page = 0;
+  Timer timer;
 
   @override
   void initState() {
     super.initState();
     tabControllerInitializer();
+    initTimer();
     _tabController.addListener(() {
       setState(() {
         _page = _tabController.index;
@@ -26,8 +33,15 @@ class _DashboardPageState extends State<DashboardPage>
     });
   }
 
+  void initTimer() {
+    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => checkNewNews());
+  }
+
+  Future<void> checkNewNews() async {}
+
   @override
   void dispose() {
+    timer?.cancel();
     _tabController.dispose();
     super.dispose();
   }
@@ -36,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage>
     _tabController = TabController(
       vsync: this,
       initialIndex: _page,
-      length: 2,
+      length: 3,
     );
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
@@ -59,6 +73,7 @@ class _DashboardPageState extends State<DashboardPage>
           children: [
             Tab(child: NewsFeedPage()),
             Tab(child: ArchiveNewsFeedPage()),
+            Tab(child: SettingsPage()),
           ],
         ),
         Align(
@@ -73,6 +88,7 @@ class _DashboardPageState extends State<DashboardPage>
             items: <Widget>[
               Icon(Icons.home, size: 30, color: iconsMainColor),
               Icon(Icons.archive, size: 30, color: iconsMainColor),
+              Icon(Icons.settings, size: 30, color: iconsMainColor),
             ],
             color: Colors.white,
             onTap: (index) {
@@ -83,4 +99,6 @@ class _DashboardPageState extends State<DashboardPage>
       ],
     ));
   }
+
+  onNotificationClick(String ss) {}
 }

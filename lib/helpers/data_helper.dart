@@ -39,13 +39,14 @@ class DataHelper {
 
   Future<void> add({NewsFeed newsFeed}) async {
     final count = await _newsFeedStore.count(_databaseState.database,
-        filter: Filter.equals("date", newsFeed.date));
+        filter: Filter.equals(DBConstants.keyFieldName, newsFeed.date));
     if (count > 0) return;
     return _newsFeedStore.add(_databaseState.database, newsFeed.toJson());
   }
 
   Future<void> delete({NewsFeed newsFeed}) async {
-    final finder = Finder(filter: Filter.equals("date", newsFeed.date));
+    final finder =
+        Finder(filter: Filter.equals(DBConstants.keyFieldName, newsFeed.date));
     await _newsFeedStore.delete(_databaseState.database, finder: finder);
   }
 
