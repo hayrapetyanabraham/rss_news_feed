@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:get_it/get_it.dart';
 import 'package:newsfeed/constants/db_constants.dart';
 import 'package:newsfeed/models/news_feed/news_feed.dart';
 import 'package:newsfeed/store/database/database_state.dart';
+import 'package:path/path.dart' as p;
 import 'package:sembast/sembast.dart';
 
 class DataHelper {
@@ -54,5 +57,10 @@ class DataHelper {
     await _newsFeedStore.drop(
       _databaseState.database,
     );
+  }
+
+  File fileFromDocsDir(String filename, appDocumentDir) {
+    final dbPath = p.join(appDocumentDir.path, filename);
+    return File(dbPath);
   }
 }

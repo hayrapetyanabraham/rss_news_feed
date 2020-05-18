@@ -55,6 +55,37 @@ mixin _$NewsFeedState on _NewsFeedState, Store {
     });
   }
 
+  final _$hasUnreadNewsFeedsAtom =
+      Atom(name: '_NewsFeedState.hasUnreadNewsFeeds');
+
+  @override
+  bool get hasUnreadNewsFeeds {
+    _$hasUnreadNewsFeedsAtom.reportRead();
+    return super.hasUnreadNewsFeeds;
+  }
+
+  @override
+  set hasUnreadNewsFeeds(bool value) {
+    _$hasUnreadNewsFeedsAtom.reportWrite(value, super.hasUnreadNewsFeeds, () {
+      super.hasUnreadNewsFeeds = value;
+    });
+  }
+
+  final _$lastNewsFeedDateAtom = Atom(name: '_NewsFeedState.lastNewsFeedDate');
+
+  @override
+  String get lastNewsFeedDate {
+    _$lastNewsFeedDateAtom.reportRead();
+    return super.lastNewsFeedDate;
+  }
+
+  @override
+  set lastNewsFeedDate(String value) {
+    _$lastNewsFeedDateAtom.reportWrite(value, super.lastNewsFeedDate, () {
+      super.lastNewsFeedDate = value;
+    });
+  }
+
   final _$getNewsFeedsAsyncAction = AsyncAction('_NewsFeedState.getNewsFeeds');
 
   @override
@@ -68,6 +99,14 @@ mixin _$NewsFeedState on _NewsFeedState, Store {
   @override
   Future<void> storeNewsFeed(RssItem rssItem) {
     return _$storeNewsFeedAsyncAction.run(() => super.storeNewsFeed(rssItem));
+  }
+
+  final _$initAppDirectoryAsyncAction =
+      AsyncAction('_NewsFeedState.initAppDirectory');
+
+  @override
+  Future<void> initAppDirectory() {
+    return _$initAppDirectoryAsyncAction.run(() => super.initAppDirectory());
   }
 
   final _$deleteNewsFeedAsyncAction =
@@ -87,12 +126,28 @@ mixin _$NewsFeedState on _NewsFeedState, Store {
     return _$getStoredItemListAsyncAction.run(() => super.getStoredItemList());
   }
 
+  final _$_NewsFeedStateActionController =
+      ActionController(name: '_NewsFeedState');
+
+  @override
+  File storeImage(String imageName) {
+    final _$actionInfo = _$_NewsFeedStateActionController.startAction(
+        name: '_NewsFeedState.storeImage');
+    try {
+      return super.storeImage(imageName);
+    } finally {
+      _$_NewsFeedStateActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 countMb: ${countMb},
 rssItemList: ${rssItemList},
-storedNewsFeedList: ${storedNewsFeedList}
+storedNewsFeedList: ${storedNewsFeedList},
+hasUnreadNewsFeeds: ${hasUnreadNewsFeeds},
+lastNewsFeedDate: ${lastNewsFeedDate}
     ''';
   }
 }

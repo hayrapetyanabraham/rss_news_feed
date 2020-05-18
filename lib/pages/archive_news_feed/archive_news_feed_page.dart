@@ -20,6 +20,7 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage>
   @override
   void initState() {
     super.initState();
+    newsFeedState.initAppDirectory();
     newsFeedState.getStoredItemList();
   }
 
@@ -69,6 +70,7 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage>
                                 onActionClick: () {
                                   onDeleteClick(newsFeed);
                                 },
+                                imageFileName: newsFeed.imageFileName,
                                 title: newsFeed.title,
                                 imageUrl: newsFeed.imageUrl,
                                 description: newsFeed.description,

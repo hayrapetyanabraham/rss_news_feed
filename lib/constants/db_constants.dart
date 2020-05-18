@@ -4,6 +4,6 @@ class DBConstants {
   // Store Name
   static const String newsFeed = 'newsFeed';
 
-  // Fields
+  // Key Field
   static const String keyFieldName = 'date';
 }

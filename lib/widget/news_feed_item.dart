@@ -1,6 +1,8 @@
+import 'package:file_cache/file_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:newsfeed/constants/app_colors.dart';
 import 'package:newsfeed/helpers/date_helper.dart';
+import 'package:newsfeed/store/news_feed/news_feed_state.dart';
 import 'package:newsfeed/widget/shadow_container.dart';
 
 class NewsFeedItem extends StatelessWidget {
@@ -9,14 +11,18 @@ class NewsFeedItem extends StatelessWidget {
   final String imageUrl;
   final String description;
   final String date;
+  final String imageFileName;
   final bool isArchive;
+  final NewsFeedState newsFeedState;
 
   const NewsFeedItem(
       {this.onActionClick,
       this.title,
       this.imageUrl,
       this.description,
+      this.imageFileName,
       this.date,
+      this.newsFeedState,
       this.isArchive});
 
   @override
@@ -25,7 +31,11 @@ class NewsFeedItem extends StatelessWidget {
       blurRadius: 30,
       margin: const EdgeInsets.only(left: 10, right: 10, bottom: 35),
       borderRadius: const BorderRadius.all(Radius.circular(12)),
-      shadowColor: const Color.fromRGBO(188, 201, 215, 0.25),
+      shadowColor: newsFeedState?.lastNewsFeedDate != null
+          ? (isAfterDate(newsFeedState.lastNewsFeedDate, date)
+              ? const Color.fromRGBO(144, 238, 144, 0.25)
+              : const Color.fromRGBO(188, 201, 215, 0.25))
+          : const Color.fromRGBO(188, 201, 215, 0.25),
       child: Padding(
         padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
@@ -38,7 +48,10 @@ class NewsFeedItem extends StatelessWidget {
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: Image.network(imageUrl),
+              child: Image(
+                fit: BoxFit.cover,
+                image: new FileCacheImage(imageUrl),
+              ),
             ),
             Text(
               description,

@@ -8,3 +8,13 @@ String convertDateFrom(String date) {
     return date;
   }
 }
+
+bool isAfterDate(String firstDate, String lastDate) {
+  try {
+    final firstFormat = DateFormat("E, d MMM yyyy HH:mm:ss Z").parse(firstDate);
+    final lastFormat = DateFormat("E, d MMM yyyy HH:mm:ss Z").parse(lastDate);
+    return firstFormat.isAfter(lastFormat);
+  } catch (e) {
+    return false;
+  }
+}

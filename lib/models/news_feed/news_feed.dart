@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'news_feed.g.dart';
@@ -12,6 +11,7 @@ class NewsFeed {
   final String imageUrl;
   final String guid;
   final String date;
+  final String imageFileName;
 
   NewsFeed({
     this.title,
@@ -19,6 +19,7 @@ class NewsFeed {
     this.guid,
     this.description,
     this.date,
+    this.imageFileName,
   });
 
 

@@ -22,7 +22,16 @@ class _NewsFeedPageState extends State<NewsFeedPage> with ScaffoldMixin {
   @override
   void initState() {
     super.initState();
-    newsFeedState.getNewsFeeds();
+    getNewsFeeds();
+    initDate();
+  }
+
+  Future<void> getNewsFeeds() async {
+    await newsFeedState.getNewsFeeds();
+  }
+
+  Future<void> initDate() async {
+    await newsFeedState.initLastNewsDate();
   }
 
   @override
@@ -32,7 +41,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> with ScaffoldMixin {
   }
 
   Future<void> _onNewsFeedsRefresh() async {
-    await newsFeedState.getNewsFeeds();
+    getNewsFeeds();
     _newsFeedsRefreshController.refreshCompleted();
   }
 
@@ -85,6 +94,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> with ScaffoldMixin {
                                     onActionClick: () {
                                       onArchiveClick(rssItem);
                                     },
+                                    imageFileName: null,
                                     title: rssItem.title,
                                     imageUrl: rssItem.enclosure.url,
                                     description: rssItem.description,
@@ -94,7 +104,10 @@ class _NewsFeedPageState extends State<NewsFeedPage> with ScaffoldMixin {
                                 );
                               })
                           : Center(
-                              child: Text('The news feeds are not existing'),
+                              child: Text(
+                                  'please check your devices network connection',
+                                  style: const TextStyle(
+                                      color: charcoalGreyColor, fontSize: 12)),
                             ))),
             );
     });

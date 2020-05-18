@@ -19,13 +19,11 @@ class _DashboardPageState extends State<DashboardPage>
   final newsFeedState = NewsFeedState();
   TabController _tabController;
   int _page = 0;
-  Timer timer;
 
   @override
   void initState() {
     super.initState();
     tabControllerInitializer();
-    initTimer();
     _tabController.addListener(() {
       setState(() {
         _page = _tabController.index;
@@ -33,15 +31,8 @@ class _DashboardPageState extends State<DashboardPage>
     });
   }
 
-  void initTimer() {
-    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => checkNewNews());
-  }
-
-  Future<void> checkNewNews() async {}
-
   @override
   void dispose() {
-    timer?.cancel();
     _tabController.dispose();
     super.dispose();
   }
@@ -99,6 +90,4 @@ class _DashboardPageState extends State<DashboardPage>
       ],
     ));
   }
-
-  onNotificationClick(String ss) {}
 }

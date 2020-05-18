@@ -13,6 +13,7 @@ NewsFeed _$NewsFeedFromJson(Map<String, dynamic> json) {
     guid: json['guid'] as String,
     description: json['description'] as String,
     date: json['date'] as String,
+    imageFileName: json['imageFileName'] as String,
   );
 }
 
@@ -22,4 +23,5 @@ Map<String, dynamic> _$NewsFeedToJson(NewsFeed instance) => <String, dynamic>{
       'imageUrl': instance.imageUrl,
       'guid': instance.guid,
       'date': instance.date,
+      'imageFileName': instance.imageFileName,
     };
