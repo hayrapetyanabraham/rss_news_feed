@@ -11,12 +11,14 @@ class NewsFeed {
   final String imageUrl;
   final String guid;
   final String date;
+  final String htmlCode;
   final String imageFileName;
 
   NewsFeed({
     this.title,
     this.imageUrl,
     this.guid,
+    this.htmlCode,
     this.description,
     this.date,
     this.imageFileName,

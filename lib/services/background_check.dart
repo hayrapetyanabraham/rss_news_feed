@@ -1,4 +1,5 @@
 import 'package:background_fetch/background_fetch.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:newsfeed/helpers/date_helper.dart';
@@ -10,7 +11,7 @@ import 'package:uuid/uuid.dart';
 class BackgroundCheck {
   final newsFeedState = NewsFeedState();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   final navigatorKey = GlobalKey<NavigatorState>();
 
   BuildContext context;
@@ -26,7 +27,7 @@ class BackgroundCheck {
 
   BackgroundCheck() {
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -38,21 +39,30 @@ class BackgroundCheck {
     int minimumInterval = await StorageHelper.getSelectedDuration();
     BackgroundFetch.configure(
         BackgroundFetchConfig(
-            minimumFetchInterval: minimumInterval == null
-                ? 15
-                : minimumInterval,
+            minimumFetchInterval:
+                minimumInterval == null ? 15 : minimumInterval,
             stopOnTerminate: false,
             enableHeadless: true,
-            startOnBoot: true), () async {
+            forceAlarmManager: true,
+            startOnBoot: true), (String taskId) async {
       checkUpdate();
+      BackgroundFetch.finish(taskId);
     }).then((int status) {
       print('[BackgroundFetch] SUCCESS: $status');
     }).catchError((e) {
       print('[BackgroundFetch] ERROR: $e');
     });
+    BackgroundFetch.scheduleTask(TaskConfig(
+      taskId: "com.transistorsoft.customtask",
+      delay: 6000,
+      forceAlarmManager: true,
+      periodic: true,
+    ));
   }
 
   void checkUpdate() async {
+    bool hasInternetConnection = await DataConnectionChecker().hasConnection;
+    if (hasInternetConnection == null || hasInternetConnection == false) return;
     var sendNotification = false;
     await newsFeedState.getNewsFeeds();
     final newsDate = await StorageHelper.getLastNewsDate();

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:dart_rss/domain/rss_item.dart';
 import 'package:dio/dio.dart';
 import 'package:mobx/mobx.dart';
 import 'package:newsfeed/helpers/data_helper.dart';
+import 'package:newsfeed/helpers/date_helper.dart';
 import 'package:newsfeed/helpers/preferences_helper.dart';
 import 'package:newsfeed/models/news_feed/news_feed.dart';
 import 'package:newsfeed/repositories/news_feed/news_feed_repository.dart';
@@ -44,9 +46,18 @@ abstract class _NewsFeedState with Store {
     }
     try {
       List<RssItem> rssItems = await newsFeedRepository.getNewsFeed();
+      final newsDate = await StorageHelper.getLastNewsDate();
+      if (newsDate == null) {
+        await StorageHelper.setLastNewsDate(rssItems.first.pubDate);
+        for (var item in rssItems) {
+          if (isAfterDate(item.pubDate, newsDate)) {
+            await StorageHelper.setLastNewsDate(item.pubDate);
+          }
+        }
+      }
       rssItemList = rssItems;
     } on DioError catch (e) {
-      throw e.response.data;
+      throw e;
     } finally {
       loadingState.stopLoading();
     }
@@ -58,9 +69,11 @@ abstract class _NewsFeedState with Store {
 
   @action
   Future<void> storeNewsFeed(RssItem rssItem) async {
+    String htmlCode = await newsFeedRepository.getHtml(rssItem.guid);
     final newsFeed = NewsFeed(
         guid: rssItem.guid,
         title: rssItem.title,
+        htmlCode: htmlCode,
         imageUrl: rssItem.enclosure.url,
         description: rssItem.description,
         imageFileName: Uuid().v1(),

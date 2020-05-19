@@ -57,7 +57,8 @@ class Router extends RouterBase {
         final typedArgs =
             args as ReadNewsPageArguments ?? ReadNewsPageArguments();
         return MaterialPageRoute<dynamic>(
-          builder: (context) => ReadNewsPage(newsUrl: typedArgs.newsUrl),
+          builder: (context) => ReadNewsPage(
+              newsUrl: typedArgs.newsUrl, htmlCode: typedArgs.htmlCode),
           settings: settings,
         );
       case Routes.archiveNewsFeedPage:
@@ -83,5 +84,6 @@ class Router extends RouterBase {
 //ReadNewsPage arguments holder class
 class ReadNewsPageArguments {
   final String newsUrl;
-  ReadNewsPageArguments({this.newsUrl});
+  final String htmlCode;
+  ReadNewsPageArguments({this.newsUrl, this.htmlCode});
 }

@@ -27,7 +27,8 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage>
   void showFullVersionNews(NewsFeed newsFeed) {
     ExtendedNavigator.rootNavigator.pushNamed(
       Routes.readNewsPage,
-      arguments: ReadNewsPageArguments(newsUrl: newsFeed.guid),
+      arguments: ReadNewsPageArguments(
+          newsUrl: newsFeed.guid, htmlCode: newsFeed.htmlCode),
     );
   }
 
@@ -40,14 +41,7 @@ class _ArchiveNewsFeedPageState extends State<ArchiveNewsFeedPage>
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
       return newsFeedState.loadingState.loading
-          ? Container(
-              alignment: Alignment.center,
-              height: 48,
-              width: 48,
-              child: const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(navyColor),
-              ),
-            )
+          ? Container()
           : Scaffold(
               key: scaffoldKey,
               backgroundColor: primaryColor,

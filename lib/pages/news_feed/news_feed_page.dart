@@ -48,7 +48,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> with ScaffoldMixin {
   void showFullVersionNews(RssItem rssItem) {
     ExtendedNavigator.rootNavigator.pushNamed(
       Routes.readNewsPage,
-      arguments: ReadNewsPageArguments(newsUrl: rssItem.guid),
+      arguments: ReadNewsPageArguments(newsUrl: rssItem.guid, htmlCode: null),
     );
   }
 

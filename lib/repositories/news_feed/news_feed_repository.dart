@@ -12,4 +12,9 @@ class NewsFeedRepository {
     var rssFeeds = new RssFeed.parse(res.data);
     return rssFeeds.items;
   }
+
+  Future<String> getHtml(String url) async {
+    final res = await dio.get(url);
+    return res.data;
+  }
 }
